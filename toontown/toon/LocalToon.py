@@ -63,6 +63,8 @@ ClaraBaseXPos = 1.45
 if (__debug__):
     import pdb
 
+from toontown.elytra.ElytraFlightController import ElytraFlightController
+
 class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
     neverDisable = 1
     piePowerSpeed = base.config.GetDouble('pie-power-speed', 0.2)
@@ -128,6 +130,7 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
             if wantNameTagAvIds:
                 messenger.send('nameTagShowAvId', [])
                 base.idTags = 1
+            self.elytra = ElytraFlightController(self)
             self.glitchX = 0
             self.glitchY = 0
             self.glitchZ = 0
@@ -277,6 +280,12 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
     def disableBodyCollisions(self):
         pass
 
+    def disableAvatarControls(self):
+        elytra = getattr(self, 'elytra', None)
+        if elytra is not None:
+            elytra.onControlsDisabled()
+        LocalAvatar.LocalAvatar.disableAvatarControls(self)
+
     def delete(self):
         try:
             self.LocalToon_deleted
@@ -284,6 +293,9 @@ class LocalToon(DistributedToon.DistributedToon, LocalAvatar.LocalAvatar):
             self.LocalToon_deleted = 1
             Toon.unloadDialog()
             QuestParser.clear()
+            if getattr(self, 'elytra', None) is not None:
+                self.elytra.destroy()
+                self.elytra = None
             DistributedToon.DistributedToon.delete(self)
             LocalAvatar.LocalAvatar.delete(self)
             self.bFriendsList.destroy()

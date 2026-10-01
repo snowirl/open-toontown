@@ -5,6 +5,8 @@ import random
 from toontown.launcher import DownloadForceAcknowledge
 from direct.task.Task import Task
 from toontown.hood import ZoneUtil
+from toontown.elytra import ElytraConstants
+from toontown.elytra.AirplaneWingsPickup import AirplaneWingsPickupManager
 
 class TTPlayground(Playground.Playground):
 
@@ -20,10 +22,12 @@ class TTPlayground(Playground.Playground):
     def enter(self, requestStatus):
         Playground.Playground.enter(self, requestStatus)
         taskMgr.doMethodLater(1, self.__birds, 'TT-birds')
+        AirplaneWingsPickupManager.spawn(self, ElytraConstants.PICKUP_TTC_POS)
 
     def exit(self):
         Playground.Playground.exit(self)
         taskMgr.remove('TT-birds')
+        AirplaneWingsPickupManager.remove()
 
     def __birds(self, task):
         base.playSfx(random.choice(self.loader.birdSound))

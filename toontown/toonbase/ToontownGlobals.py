@@ -1620,6 +1620,7 @@ DefaultMaxBankMoney = 12000
 DefaultBankItemId = 1350
 ToonAnimStates = set(['off',
  'neutral',
+ 'Glide',
  'victory',
  'Happy',
  'Sad',

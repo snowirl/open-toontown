@@ -197,6 +197,8 @@ class DistributedToon(DistributedPlayer.DistributedPlayer, Toon.Toon, Distribute
             self.boardingParty.demandDrop()
             self.boardingParty = None
         self.ignore('clientCleanup')
+        from toontown.elytra import ElytraRemote
+        ElytraRemote.cleanupRemoteView(self)
         self.stopAnimations()
         self.clearCheesyEffect()
         self.stopBlink()
@@ -850,6 +852,14 @@ class DistributedToon(DistributedPlayer.DistributedPlayer, Toon.Toon, Distribute
              extraArgs])
         self.cleanupPieInHand()
         return
+
+    def setElytraState(self, flags, pitch, bank):
+        from toontown.elytra import ElytraRemote
+        ElytraRemote.getRemoteView(self).setState(flags, pitch, bank)
+
+    def setElytraBoost(self):
+        from toontown.elytra import ElytraRemote
+        ElytraRemote.getRemoteView(self).boost()
 
     def b_setEmoteState(self, animIndex, animMultiplier):
         self.setEmoteState(animIndex, animMultiplier)

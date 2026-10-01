@@ -520,6 +520,7 @@ class Toon(Avatar.Avatar, ToonHead):
          State('jump', self.enterJump, self.exitJump),
          State('jumpAirborne', self.enterJumpAirborne, self.exitJumpAirborne),
          State('jumpLand', self.enterJumpLand, self.exitJumpLand),
+         State('Glide', self.enterGlide, self.exitGlide),
          State('run', self.enterRun, self.exitRun),
          State('swim', self.enterSwim, self.exitSwim),
          State('swimhold', self.enterSwimHold, self.exitSwimHold),
@@ -1567,6 +1568,18 @@ class Toon(Avatar.Avatar, ToonHead):
     def exitJumpAirborne(self):
         self.stop()
         self.playingAnim = 'neutral'
+
+    def enterGlide(self, animMultiplier = 1, ts = 0, callback = None, extraArgs = []):
+        if not self.isDisguised:
+            self.playingAnim = 'jump-idle'
+            self.setPlayRate(1.0, 'jump-idle')
+            self.loop('jump-idle')
+        self.setActiveShadow(0)
+
+    def exitGlide(self):
+        self.stop()
+        self.playingAnim = 'neutral'
+        self.setActiveShadow(1)
 
     def enterJumpLand(self, animMultiplier = 1, ts = 0, callback = None, extraArgs = []):
         if not self.isDisguised:

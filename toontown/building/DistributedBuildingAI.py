@@ -508,6 +508,8 @@ class DistributedBuildingAI(DistributedObjectAI.DistributedObjectAI):
         taskMgr.remove(name)
 
     def clearOutToonInteriorForCogdoTask(self, task):
+        if not hasattr(self, 'fsm'):
+            return Task.done
         self.fsm.request('becomingCogdo')
         return Task.done
 
